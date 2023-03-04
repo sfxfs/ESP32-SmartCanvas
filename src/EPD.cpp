@@ -1,19 +1,13 @@
 #include <EPD.h>
 
-#include <GxEPD2_BW.h> //GxEPD2 lib
-#include <GxEPD2_3C.h>
-
 // #define SPI_BUS HSPI
-// #define PIN_CLK 13
+// #define PIN_CLK 14
 // #define PIN_MISO 12
-// #define PIN_MOSI 14
+// #define PIN_MOSI 13
 // #define PIN_CS 15
-// #define PIN_DC 0
-// #define PIN_RST 2
-// #define PIN_BUSY 4
-
-SPIClass *select_spi = NULL;
-GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> *display = NULL;
+// #define PIN_DC 2
+// #define PIN_RST 17
+// #define PIN_BUSY 16
 
 EPDisplay::EPDisplay(byte spi_bus, byte pin_clk, byte pin_miso, byte pin_mosi, uint16_t pin_cs, uint16_t pin_dc, uint16_t pin_rst, uint16_t pin_busy)
     : _spi_bus(spi_bus),
@@ -23,9 +17,15 @@ EPDisplay::EPDisplay(byte spi_bus, byte pin_clk, byte pin_miso, byte pin_mosi, u
       _pin_cs(pin_cs),
       _pin_dc(pin_dc),
       _pin_rst(pin_rst),
-      _pin_busy(pin_busy){};
+      _pin_busy(pin_busy) {}
 
-void EPDisplay::init() const
+EPDisplay::~EPDisplay()
+{
+    delete select_spi;
+    delete display;
+}
+
+void EPDisplay::init()
 {
     Serial.begin(115200);
     Serial.println();
